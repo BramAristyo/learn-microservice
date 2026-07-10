@@ -12,6 +12,7 @@ import (
 
 	pb "github.com/bramAristyo/learn-microservice/grpc-playground"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 )
 
 type Server struct {
@@ -19,6 +20,13 @@ type Server struct {
 }
 
 func (s *Server) SayHello(ctx context.Context, in *pb.SayHelloRequest) (*pb.SayHelloResponse, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		auth := md.Get("authorization")
+		requestID := md.Get("x-request-id")
+
+		log.Println("Get metadata from client:", auth, requestID)
+	}
 	time.Sleep(3 * time.Second)
 	return &pb.SayHelloResponse{
 		Message: "Hello " + in.GetName(),

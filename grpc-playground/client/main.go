@@ -7,6 +7,7 @@ import (
 	pb "github.com/bramAristyo/learn-microservice/grpc-playground"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 )
 
 func main() {
@@ -20,7 +21,15 @@ func main() {
 	var callOpts []grpc.CallOption
 	log.Printf("Request to GreeterService SayHello('John Doe')\n")
 
-	responseHello, err := c.SayHello(context.Background(), &pb.SayHelloRequest{Name: "John Doe"}, callOpts...)
+	ctx := metadata.NewOutgoingContext(
+		context.Background(),
+		metadata.Pairs(
+			"authorization", "Bearer EXAMPLE",
+			"x-request-id", "request-key-001",
+		),
+	)
+
+	responseHello, err := c.SayHello(ctx, &pb.SayHelloRequest{Name: "John Doe"}, callOpts...)
 	if err != nil {
 		log.Fatalf("Error when calling SayHello: %s", err)
 	}

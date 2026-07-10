@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/bramAristyo/learn-microservice/proto/user;user";
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  rpc FindUser(FindUserRequest) returns (FindUserResponse) {}
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string name = 3;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string name = 2;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message FindUserRequest {
+  string id = 1;
+}
+
+message FindUserResponse {
+  User user = 1;
+}
